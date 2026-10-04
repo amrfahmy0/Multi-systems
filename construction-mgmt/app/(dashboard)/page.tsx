@@ -133,7 +133,7 @@ export default function DashboardPage() {
             </div>
             <div className="flex flex-col gap-1">
               <span className="text-zinc-500 text-[10px] sm:text-xs font-semibold uppercase tracking-wider truncate">متوقف</span>
-              <span className="text-xl sm:text-2xl font-bold font-mono text-amber-400">{projects.filter(p => p.status === 'suspended').length}</span>
+              <span className="text-xl sm:text-2xl font-bold font-mono text-amber-400">{projects.filter(p => p.status === 'on_hold').length}</span>
             </div>
           </div>
         )}
@@ -321,7 +321,7 @@ function NewProjectModal({
           </Button>
           <Button
             color="primary"
-            onPress={handleSubmit(onFormSubmit)}
+            onPress={() => { handleSubmit(onFormSubmit)(); }}
             isLoading={submitting}
           >
             {AR.general.save}

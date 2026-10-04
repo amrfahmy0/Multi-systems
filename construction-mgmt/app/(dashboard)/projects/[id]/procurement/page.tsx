@@ -130,8 +130,8 @@ export default function ProcurementPage() {
                   <TableCell className="font-mono text-sm">{formatCurrency(Number(item.unit_price))}</TableCell>
                   <TableCell className="font-mono font-bold text-sm">{formatCurrency(Number(item.total_price))}</TableCell>
                   <TableCell>
-                    {item.invoice_url ? (
-                      <Button as="a" href={item.invoice_url} target="_blank" rel="noopener noreferrer" isIconOnly color="primary" variant="flat" size="sm">
+                    {item.invoice_urls && item.invoice_urls.length > 0 ? (
+                      <Button as="a" href={item.invoice_urls[0]} target="_blank" rel="noopener noreferrer" isIconOnly color="primary" variant="flat" size="sm">
                         <ImageIcon size={14} />
                       </Button>
                     ) : (
@@ -160,7 +160,7 @@ export default function ProcurementPage() {
         <AddProcurementModal
           onClose={() => setShowAddModal(false)}
           onSubmit={async (data, invoiceUrl) => {
-            await addItem(data, invoiceUrl);
+            await addItem(data, [invoiceUrl]);
             setShowAddModal(false);
             loadItems();
           }}

@@ -238,7 +238,7 @@ function EditProjectModal({
           </Button>
           <Button
             color="primary"
-            onPress={handleSubmit(onFormSubmit)}
+            onPress={() => { handleSubmit(onFormSubmit)(); }}
             isLoading={submitting}
           >
             {AR.general.save}

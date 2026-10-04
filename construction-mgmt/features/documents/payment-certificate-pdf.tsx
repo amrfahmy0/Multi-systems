@@ -300,10 +300,10 @@ interface PaymentCertDocumentProps {
   items: Array<{
     description: string;
     unit: string;
-    quantity_contract: number;
+    quantity_contract?: number;
     quantity_previous: number;
     quantity_current: number;
-    execution_percentage: number;
+    execution_percentage?: number;
     unit_price: number;
   }>;
   totalWorkValue: number;

@@ -438,7 +438,8 @@ function ExpensesTable({ expenses, onEdit, onDelete }: { expenses: GeneralExpens
           <TableColumn align="center">{AR.general.actions}</TableColumn>
         </TableHeader>
         <TableBody>
-          {normalExpenses.map((e) => (
+          {( [
+          ...normalExpenses.map((e) => (
               <TableRow key={e.id}>
                 <TableCell>
                   <div className="flex items-center gap-2">
@@ -459,9 +460,9 @@ function ExpensesTable({ expenses, onEdit, onDelete }: { expenses: GeneralExpens
                   </div>
                 </TableCell>
               </TableRow>
-            ))}
+            )),
 
-          {procurementExpenses.length > 0 && (
+          ...(procurementExpenses.length > 0 ? [
             <TableRow key="procurement-group" className="bg-primary-50/50 hover:bg-primary-50/70 cursor-pointer">
               <TableCell>
                 <div className="flex items-center gap-2 font-bold text-primary-700 select-none" onClick={() => setProcurementExpanded(!procurementExpanded)}>
@@ -475,9 +476,9 @@ function ExpensesTable({ expenses, onEdit, onDelete }: { expenses: GeneralExpens
               <TableCell>—</TableCell>
               <TableCell>—</TableCell>
             </TableRow>
-          )}
+          ] : []),
 
-          {procurementExpanded && procurementExpenses.map((e) => (
+          ...(procurementExpanded ? procurementExpenses.map((e) => (
             <TableRow key={e.id} className="bg-primary-50/10">
               <TableCell>
                 <div className="flex items-center gap-2 pl-6">
@@ -499,9 +500,9 @@ function ExpensesTable({ expenses, onEdit, onDelete }: { expenses: GeneralExpens
                 </div>
               </TableCell>
             </TableRow>
-          ))}
+          )) : []),
 
-          {supervisorExpenses.length > 0 && (
+          ...(supervisorExpenses.length > 0 ? [
             <TableRow key="supervisor-group" className="bg-primary-50/50 hover:bg-primary-50/70 cursor-pointer">
               <TableCell>
                 <div className="flex items-center gap-2 font-bold text-primary-700 select-none" onClick={() => setSupervisorExpanded(!supervisorExpanded)}>
@@ -515,9 +516,9 @@ function ExpensesTable({ expenses, onEdit, onDelete }: { expenses: GeneralExpens
               <TableCell>—</TableCell>
               <TableCell>—</TableCell>
             </TableRow>
-          )}
+          ] : []),
 
-          {supervisorExpanded && supervisorExpenses.map((e) => (
+          ...(supervisorExpanded ? supervisorExpenses.map((e) => (
             <TableRow key={e.id} className="bg-primary-50/10">
               <TableCell>
                 <div className="flex items-center gap-2 pl-6">
@@ -539,7 +540,8 @@ function ExpensesTable({ expenses, onEdit, onDelete }: { expenses: GeneralExpens
                 </div>
               </TableCell>
             </TableRow>
-          ))}
+          )) : [])
+          ] as any )}
         </TableBody>
       </Table>
       </div>
@@ -692,7 +694,7 @@ function AddPaymentModal({ onClose, onSubmit, initialData }: { onClose: () => vo
     <Modal isOpen onClose={onClose} title={AR.financial.addPayment} footer={
       <>
         <Button color="default" variant="light" onPress={onClose} isDisabled={submitting}>{AR.general.cancel}</Button>
-        <Button color="primary" onPress={handleSubmit(onFormSubmit)} isLoading={submitting}>{AR.general.save}</Button>
+        <Button color="primary" onPress={() => { handleSubmit(onFormSubmit)(); }} isLoading={submitting}>{AR.general.save}</Button>
       </>
     }>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(onFormSubmit)}>
@@ -722,7 +724,7 @@ function AddExpenseModal({ onClose, onSubmit, initialData }: { onClose: () => vo
   useEffect(() => {
     import("@/config/supabase/client").then(({ createClient }) => {
       const supabase = createClient();
-      supabase.from("general_expenses").select("category").then(({ data }) => {
+      supabase.from("general_expenses").select("category").then(({ data }: any) => {
         if (data) setCustomCategories(Array.from(new Set(data.map((d: any) => d.category))));
       });
     });
@@ -748,7 +750,7 @@ function AddExpenseModal({ onClose, onSubmit, initialData }: { onClose: () => vo
     <Modal isOpen onClose={onClose} title={AR.financial.addExpense} footer={
       <>
         <Button color="default" variant="light" onPress={onClose} isDisabled={submitting}>{AR.general.cancel}</Button>
-        <Button color="primary" onPress={handleSubmit(onFormSubmit)} isLoading={submitting}>{AR.general.save}</Button>
+        <Button color="primary" onPress={() => { handleSubmit(onFormSubmit)(); }} isLoading={submitting}>{AR.general.save}</Button>
       </>
     }>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(onFormSubmit)}>
@@ -891,7 +893,7 @@ function AddProcurementModal({
   useEffect(() => {
     import("@/config/supabase/client").then(({ createClient }) => {
       const supabase = createClient();
-      supabase.from("procurement_log").select("category").then(({ data }) => {
+      supabase.from("procurement_log").select("category").then(({ data }: any) => {
         if (data) setCustomCategories(Array.from(new Set(data.map((d: any) => d.category))));
       });
     });
@@ -942,7 +944,7 @@ function AddProcurementModal({
           <Button color="default" variant="light" onPress={onClose} isDisabled={submitting}>
             {AR.general.cancel}
           </Button>
-          <Button color="primary" onPress={handleSubmit(onFormSubmit)} isLoading={submitting}>
+          <Button color="primary" onPress={() => { handleSubmit(onFormSubmit)(); }} isLoading={submitting}>
             {submitting && uploadProgress ? uploadProgress : AR.general.save}
           </Button>
         </>
@@ -1170,8 +1172,8 @@ function AddSupervisorModal({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SupervisorLogFormData>({
-    resolver: zodResolver(supervisorLogSchema),
+  } = useForm<any>({
+    resolver: zodResolver(supervisorLogSchema) as any,
     defaultValues: initialData || { work_date: new Date().toISOString().split("T")[0] },
   });
 
@@ -1208,12 +1210,12 @@ function AddSupervisorModal({
         <div>
           <label className="block text-xs font-semibold text-zinc-700 mb-1.5">التاريخ</label>
           <input type="date" {...register("work_date")} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
-          {errors.work_date && <p className="text-xs text-rose-600 mt-1">{errors.work_date.message}</p>}
+          {errors.work_date && <p className="text-xs text-rose-600 mt-1">{String(errors.work_date.message)}</p>}
         </div>
         <div>
           <label className="block text-xs font-semibold text-zinc-700 mb-1.5">بيان الأعمال التي قام بها</label>
           <textarea {...register("description")} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" rows={4} placeholder="اكتب ما تم إنجازه اليوم..." />
-          {errors.description && <p className="text-xs text-rose-600 mt-1">{errors.description.message}</p>}
+          {errors.description && <p className="text-xs text-rose-600 mt-1">{String(errors.description.message)}</p>}
         </div>
         
         <label className="flex items-center gap-3 p-3 bg-indigo-50/50 border border-indigo-100 rounded-xl cursor-pointer hover:bg-indigo-50 transition-colors">

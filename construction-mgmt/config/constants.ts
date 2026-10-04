@@ -1,3 +1,5 @@
+export const TAX_RATE = 0.14; // 14% Value Added Tax (VAT)
+
 // ─── Arabic UI Strings ─────────────────────────────────────────────
 export const AR = {
   // App
