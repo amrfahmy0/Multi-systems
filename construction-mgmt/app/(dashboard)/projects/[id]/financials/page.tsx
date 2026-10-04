@@ -752,7 +752,10 @@ function AddPaymentModal({ onClose, onSubmit, initialData }: { onClose: () => vo
 function AddExpenseModal({ onClose, onSubmit, initialData }: { onClose: () => void; onSubmit: (data: GeneralExpenseFormData) => Promise<void>; initialData?: any }) {
   const [submitting, setSubmitting] = useState(false);
   const [customCategories, setCustomCategories] = useState<string[]>([]);
-  const [isCustomCategory, setIsCustomCategory] = useState(false);
+  const [isCustomCategory, setIsCustomCategory] = useState(() => {
+    if (!initialData?.category) return false;
+    return !EXPENSE_CATEGORIES.some(c => c.value === initialData.category);
+  });
 
   useEffect(() => {
     import("@/config/supabase/client").then(({ createClient }) => {
@@ -765,7 +768,7 @@ function AddExpenseModal({ onClose, onSubmit, initialData }: { onClose: () => vo
 
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<GeneralExpenseFormData>({
     resolver: zodResolver(generalExpenseSchema),
-    defaultValues: initialData || { expense_date: new Date().toISOString().split("T")[0] },
+    defaultValues: initialData || { expense_date: new Date().toISOString().split("T")[0], category: "" },
   });
 
   const { onChange: onCategoryChange, ...categoryReg } = register("category");
@@ -995,7 +998,10 @@ function AddProcurementModal({
   const [invoiceError, setInvoiceError] = useState("");
   const { addToast } = useToast();
   const [customCategories, setCustomCategories] = useState<string[]>([]);
-  const [isCustomCategory, setIsCustomCategory] = useState(false);
+  const [isCustomCategory, setIsCustomCategory] = useState(() => {
+    if (!initialData?.category) return false;
+    return !PROCUREMENT_CATEGORIES.some(c => c.value === initialData.category);
+  });
 
   useEffect(() => {
     import("@/config/supabase/client").then(({ createClient }) => {
@@ -1014,7 +1020,7 @@ function AddProcurementModal({
     formState: { errors },
   } = useForm<ProcurementFormData>({
     resolver: zodResolver(procurementSchema),
-    defaultValues: initialData || { procurement_date: new Date().toISOString().split("T")[0] },
+    defaultValues: initialData || { procurement_date: new Date().toISOString().split("T")[0], category: "" },
   });
 
   const { onChange: onCategoryChange, ...categoryReg } = register("category");
