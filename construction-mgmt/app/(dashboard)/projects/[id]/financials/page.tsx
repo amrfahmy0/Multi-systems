@@ -163,7 +163,7 @@ export default function FinancialsPage() {
               color="primary" 
               variant="shadow" 
               startContent={<Plus size={18} />} 
-              onPress={() => { setEditTarget(null); setShowAddModal(true); }}
+              onClick={() => { setEditTarget(null); setShowAddModal(true); }}
               className="font-bold shadow-primary-500/30 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500 px-6 transition-all h-12"
             >
               {activeTab === "payments" ? AR.financial.addPayment : 
@@ -283,7 +283,7 @@ export default function FinancialsPage() {
               color="primary" 
               variant="flat" 
               startContent={<Plus size={18} />} 
-              onPress={() => { setEditTarget(null); setShowAddModal(true); }}
+              onClick={() => { setEditTarget(null); setShowAddModal(true); }}
               className="font-bold rounded-xl w-full sm:w-auto px-8 py-6 border-2 border-dashed border-primary-200 hover:border-primary-500 hover:bg-primary-50 transition-all text-primary-600 bg-white"
             >
               {activeTab === "payments" ? AR.financial.addPayment : 
@@ -366,37 +366,70 @@ function PaymentsTable({ payments, onEdit, onDelete, showSensitive }: { payments
   }
 
   return (
-    <div className="overflow-x-auto w-full pb-4">
-      <Table aria-label="Payments table" shadow="sm" className="min-w-[600px]">
-        <TableHeader>
-          <TableColumn>{AR.financial.amount}</TableColumn>
-          <TableColumn>{AR.financial.date}</TableColumn>
-          <TableColumn>{AR.financial.receiptRef}</TableColumn>
-          <TableColumn align="center">{AR.general.actions}</TableColumn>
-        </TableHeader>
-        <TableBody>
-          {payments.map((p) => (
-            <TableRow key={p.id}>
-              <TableCell className="font-mono font-bold text-emerald-700 text-sm">
-                {showSensitive ? formatCurrency(Number(p.amount)) : "******"}
-              </TableCell>
-              <TableCell className="font-mono text-sm">{formatDate(p.payment_date)}</TableCell>
-              <TableCell className="font-mono text-zinc-500 text-sm">{p.receipt_ref || "—"}</TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button isIconOnly color="default" variant="light" size="sm" onClick={() => onEdit(p)}>
-                    <Pencil size={16} className="text-zinc-500" />
-                  </Button>
-                  <Button isIconOnly color="danger" variant="light" size="sm" onClick={() => onDelete(p.id)}>
-                    <Trash2 size={16} />
-                  </Button>
+    <>
+      <div className="hidden md:block overflow-x-auto w-full pb-4">
+        <Table aria-label="Payments table" shadow="sm" className="min-w-[600px]">
+          <TableHeader>
+            <TableColumn>{AR.financial.amount}</TableColumn>
+            <TableColumn>{AR.financial.date}</TableColumn>
+            <TableColumn>{AR.financial.receiptRef}</TableColumn>
+            <TableColumn align="center">{AR.general.actions}</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {payments.map((p) => (
+              <TableRow key={p.id}>
+                <TableCell className="font-mono font-bold text-emerald-700 text-sm">
+                  {showSensitive ? formatCurrency(Number(p.amount)) : "******"}
+                </TableCell>
+                <TableCell className="font-mono text-sm">{formatDate(p.payment_date)}</TableCell>
+                <TableCell className="font-mono text-zinc-500 text-sm">{p.receipt_ref || "—"}</TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    <Button isIconOnly color="default" variant="light" size="sm" onClick={() => onEdit(p)}>
+                      <Pencil size={16} className="text-zinc-500" />
+                    </Button>
+                    <Button isIconOnly color="danger" variant="light" size="sm" onClick={() => onDelete(p.id)}>
+                      <Trash2 size={16} />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="flex md:hidden flex-col gap-4 w-full pb-4">
+        {payments.map(p => (
+          <div key={p.id} className="bg-white rounded-2xl p-4 border border-zinc-200 shadow-sm flex flex-col gap-3">
+            <div className="flex justify-between items-start gap-4">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0 border border-emerald-100 text-emerald-600">
+                  <Receipt size={18} />
                 </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+                <div>
+                  <h3 className="text-sm font-bold text-zinc-800">{p.receipt_ref || "بدون إيصال"}</h3>
+                  <span className="text-xs font-semibold text-zinc-500 mt-0.5 block">{AR.financial.clientPayments}</span>
+                </div>
+              </div>
+              <div className="text-left">
+                <span className="text-sm font-bold font-mono text-emerald-600 block">{showSensitive ? formatCurrency(Number(p.amount)) : "******"}</span>
+                <span className="text-[10px] font-semibold text-zinc-400 block mt-0.5">{formatDate(p.payment_date)}</span>
+              </div>
+            </div>
+            
+            <div className="flex justify-end gap-2 border-t border-zinc-100 pt-3 mt-1">
+              <Button size="sm" variant="flat" color="default" className="font-semibold text-xs h-8 px-4" onPress={() => onEdit(p)}>
+                تعديل
+              </Button>
+              <Button size="sm" variant="flat" color="danger" className="font-semibold text-xs h-8 px-4" onPress={() => onDelete(p.id)}>
+                حذف
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -806,68 +839,110 @@ function ProcurementTable({ items, onEdit, onDelete }: { items: ProcurementItem[
 
   return (
     <>
-    <div className="overflow-x-auto w-full pb-4">
-      <Table aria-label="Procurement table" shadow="sm" className="min-w-[700px]">
-        <TableHeader>
-          <TableColumn>{AR.procurement.itemName}</TableColumn>
-          <TableColumn>{AR.procurement.category}</TableColumn>
-          <TableColumn>{AR.financial.date}</TableColumn>
-          <TableColumn>{AR.procurement.quantity}</TableColumn>
-          <TableColumn>{AR.procurement.unitPrice}</TableColumn>
-          <TableColumn>{AR.procurement.totalPrice}</TableColumn>
-          <TableColumn align="center">{AR.procurement.invoiceImage}</TableColumn>
-          <TableColumn align="center">{AR.general.actions}</TableColumn>
-        </TableHeader>
-        <TableBody>
-          {items.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell className="font-semibold text-zinc-900 text-sm">{item.item_name}</TableCell>
-              <TableCell className="text-sm font-medium">{categoryLabel(item.category)}</TableCell>
-              <TableCell className="font-mono text-sm text-zinc-500">{formatDate(item.procurement_date)}</TableCell>
-              <TableCell className="font-mono text-sm">{item.quantity}</TableCell>
-              <TableCell className="font-mono text-sm">{formatCurrency(Number(item.unit_price))}</TableCell>
-              <TableCell className="font-mono font-bold text-emerald-700 text-sm">{formatCurrency(Number(item.total_price))}</TableCell>
-              <TableCell>
-                {item.invoice_urls && item.invoice_urls.length > 0 ? (
-                  <div className="flex items-center gap-1 flex-wrap">
-                    {item.invoice_urls.map((url, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setSelectedImage(url)}
-                        className="relative block w-10 h-10 rounded-lg overflow-hidden border border-zinc-200 hover:border-primary-500 hover:shadow-md transition-all group"
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={url} alt={`Invoice ${idx + 1}`} className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-300" />
-                      </button>
-                    ))}
+      <div className="hidden md:block overflow-x-auto w-full pb-4">
+        <Table aria-label="Procurement table" shadow="sm" className="min-w-[700px]">
+          <TableHeader>
+            <TableColumn>{AR.procurement.itemName}</TableColumn>
+            <TableColumn>{AR.procurement.category}</TableColumn>
+            <TableColumn>{AR.financial.date}</TableColumn>
+            <TableColumn>{AR.procurement.quantity}</TableColumn>
+            <TableColumn>{AR.procurement.unitPrice}</TableColumn>
+            <TableColumn>{AR.procurement.totalPrice}</TableColumn>
+            <TableColumn align="center">{AR.procurement.invoiceImage}</TableColumn>
+            <TableColumn align="center">{AR.general.actions}</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {items.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell className="font-semibold text-zinc-900 text-sm">{item.item_name}</TableCell>
+                <TableCell className="text-sm font-medium">{categoryLabel(item.category)}</TableCell>
+                <TableCell className="font-mono text-sm text-zinc-500">{formatDate(item.procurement_date)}</TableCell>
+                <TableCell className="font-mono text-sm">{item.quantity}</TableCell>
+                <TableCell className="font-mono text-sm">{formatCurrency(Number(item.unit_price))}</TableCell>
+                <TableCell className="font-mono font-bold text-emerald-700 text-sm">{formatCurrency(Number(item.total_price))}</TableCell>
+                <TableCell>
+                  {item.invoice_urls && item.invoice_urls.length > 0 ? (
+                    <div className="flex items-center gap-1 flex-wrap">
+                      {item.invoice_urls.map((url, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setSelectedImage(url)}
+                          className="relative block w-10 h-10 rounded-lg overflow-hidden border border-zinc-200 hover:border-primary-500 hover:shadow-md transition-all group"
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={url} alt={`Invoice ${idx + 1}`} className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-300" />
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-zinc-400 text-sm">—</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    <Button isIconOnly color="default" variant="light" size="sm" onClick={() => onEdit(item)}>
+                      <Pencil size={16} className="text-zinc-500" />
+                    </Button>
+                    <Button isIconOnly color="danger" variant="light" size="sm" onClick={() => onDelete(item.id)}>
+                      <Trash2 size={16} />
+                    </Button>
                   </div>
-                ) : (
-                  <span className="text-zinc-400 text-sm">—</span>
-                )}
-              </TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button isIconOnly color="default" variant="light" size="sm" onClick={() => onEdit(item)}>
-                    <Pencil size={16} className="text-zinc-500" />
-                  </Button>
-                  <Button isIconOnly color="danger" variant="light" size="sm" onClick={() => onDelete(item.id)}>
-                    <Trash2 size={16} />
-                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="flex md:hidden flex-col gap-4 w-full pb-4">
+        {items.map((item) => (
+          <div key={item.id} className="bg-white rounded-2xl p-4 border border-zinc-200 shadow-sm flex flex-col gap-3">
+            <div className="flex justify-between items-start gap-4">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center shrink-0 border border-primary-100 text-primary-600">
+                  <ShoppingCart size={18} />
                 </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-    {selectedImage && (
-      <Modal isOpen onClose={() => setSelectedImage(null)} title={AR.procurement.invoiceImage}>
-        <div className="flex justify-center p-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={selectedImage} alt="Invoice Full" className="max-w-full max-h-[75vh] rounded-xl shadow-sm object-contain" />
-        </div>
-      </Modal>
-    )}
+                <div>
+                  <h3 className="text-sm font-bold text-zinc-800 line-clamp-2">{item.item_name}</h3>
+                  <span className="text-xs font-semibold text-zinc-500 mt-0.5 block">{categoryLabel(item.category)}</span>
+                </div>
+              </div>
+              <div className="text-left">
+                <span className="text-sm font-bold font-mono text-emerald-600 block">{formatCurrency(Number(item.total_price))}</span>
+                <span className="text-[10px] font-semibold text-zinc-400 block mt-0.5">{formatDate(item.procurement_date)}</span>
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center border-t border-zinc-100 pt-3 mt-1">
+              <div className="flex gap-2 items-center">
+                <span className="text-xs font-mono bg-zinc-100 px-2 py-1 rounded-md text-zinc-600">{item.quantity} × {formatCurrency(Number(item.unit_price))}</span>
+                {item.invoice_urls && item.invoice_urls.length > 0 && (
+                  <button onClick={() => setSelectedImage(item.invoice_urls![0])} className="text-xs flex items-center gap-1 text-primary-600 font-semibold bg-primary-50 px-2 py-1 rounded-md hover:bg-primary-100">
+                    <ImageIcon size={12} /> فواتير
+                  </button>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" isIconOnly variant="flat" color="default" className="h-8 w-8 min-w-8" onPress={() => onEdit(item)}>
+                  <Pencil size={14} />
+                </Button>
+                <Button size="sm" isIconOnly variant="flat" color="danger" className="h-8 w-8 min-w-8" onPress={() => onDelete(item.id)}>
+                  <Trash2 size={14} />
+                </Button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {selectedImage && (
+        <Modal isOpen onClose={() => setSelectedImage(null)} title={AR.procurement.invoiceImage}>
+          <div className="flex justify-center p-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={selectedImage} alt="Invoice Full" className="max-w-full max-h-[75vh] rounded-xl shadow-sm object-contain" />
+          </div>
+        </Modal>
+      )}
     </>
   );
 }
@@ -1102,54 +1177,100 @@ function SupervisorTable({ logs, onEdit, onDelete, onTogglePaid }: { logs: Super
       {logs.length === 0 ? (
         <div className="text-center py-12 text-zinc-400"><p>{AR.general.noData}</p></div>
       ) : (
-        <div className="overflow-x-auto w-full pb-4">
-          <Table aria-label="Supervisor logs table" shadow="sm" className="min-w-[700px]">
-            <TableHeader>
-              <TableColumn>التاريخ واليوم</TableColumn>
-              <TableColumn>بيان الأعمال</TableColumn>
-              <TableColumn>حالة الدفع</TableColumn>
-              <TableColumn align="center">{AR.general.actions}</TableColumn>
-            </TableHeader>
-            <TableBody>
-              {logs.map((log) => (
-                <TableRow key={log.id} className={log.is_paid ? "bg-emerald-50/40" : ""}>
-                  <TableCell>
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-zinc-900 text-sm">{log.day_name}</span>
-                        <span className="font-mono text-zinc-500 text-xs">({formatDate(log.work_date)})</span>
+        <>
+          <div className="hidden md:block overflow-x-auto w-full pb-4">
+            <Table aria-label="Supervisor logs table" shadow="sm" className="min-w-[700px]">
+              <TableHeader>
+                <TableColumn>التاريخ واليوم</TableColumn>
+                <TableColumn>بيان الأعمال</TableColumn>
+                <TableColumn>حالة الدفع</TableColumn>
+                <TableColumn align="center">{AR.general.actions}</TableColumn>
+              </TableHeader>
+              <TableBody>
+                {logs.map((log) => (
+                  <TableRow key={log.id} className={log.is_paid ? "bg-emerald-50/40" : ""}>
+                    <TableCell>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-zinc-900 text-sm">{log.day_name}</span>
+                          <span className="font-mono text-zinc-500 text-xs">({formatDate(log.work_date)})</span>
+                        </div>
+                        {log.has_laborer && <span className="text-[10px] bg-indigo-100 text-indigo-700 w-fit px-1.5 py-0.5 rounded font-bold">مع عامل (+350 ج)</span>}
                       </div>
-                      {log.has_laborer && <span className="text-[10px] bg-indigo-100 text-indigo-700 w-fit px-1.5 py-0.5 rounded font-bold">مع عامل (+350 ج)</span>}
+                    </TableCell>
+                    <TableCell className="text-sm text-zinc-700 whitespace-pre-wrap">{log.description}</TableCell>
+                    <TableCell>
+                      <button
+                        onClick={() => onTogglePaid(log, !log.is_paid)}
+                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
+                          log.is_paid 
+                          ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200" 
+                          : "bg-rose-100 text-rose-700 hover:bg-rose-200"
+                        }`}
+                      >
+                        {log.is_paid ? <><CheckCircle size={12} /> مدفوع</> : <><Wallet size={12} /> غير مدفوع</>}
+                      </button>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button isIconOnly color="default" variant="light" size="sm" onClick={() => onEdit(log)}>
+                          <Pencil size={16} className="text-zinc-500" />
+                        </Button>
+                        <Button isIconOnly color="danger" variant="light" size="sm" onClick={() => onDelete(log.id)}>
+                          <Trash2 size={16} />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          <div className="flex md:hidden flex-col gap-4 w-full pb-4">
+            {logs.map((log) => (
+              <div key={log.id} className={`rounded-2xl p-4 border shadow-sm flex flex-col gap-3 ${log.is_paid ? 'bg-emerald-50/40 border-emerald-200/60' : 'bg-white border-zinc-200'}`}>
+                <div className="flex justify-between items-start gap-4">
+                  <div className="flex items-start gap-3">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${log.is_paid ? 'bg-emerald-100 text-emerald-600 border-emerald-200' : 'bg-zinc-50 text-zinc-500 border-zinc-100'}`}>
+                      <UserCog size={18} />
                     </div>
-                  </TableCell>
-                  <TableCell className="text-sm text-zinc-700 whitespace-pre-wrap">{log.description}</TableCell>
-                  <TableCell>
-                    <button
-                      onClick={() => onTogglePaid(log, !log.is_paid)}
-                      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
-                        log.is_paid 
-                        ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200" 
-                        : "bg-rose-100 text-rose-700 hover:bg-rose-200"
-                      }`}
-                    >
-                      {log.is_paid ? <><CheckCircle size={12} /> مدفوع</> : <><Wallet size={12} /> غير مدفوع</>}
-                    </button>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button isIconOnly color="default" variant="light" size="sm" onClick={() => onEdit(log)}>
-                        <Pencil size={16} className="text-zinc-500" />
-                      </Button>
-                      <Button isIconOnly color="danger" variant="light" size="sm" onClick={() => onDelete(log.id)}>
-                        <Trash2 size={16} />
-                      </Button>
+                    <div>
+                      <h3 className="text-sm font-bold text-zinc-800 flex items-center gap-2">
+                        {log.day_name}
+                        {log.has_laborer && <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-bold">مع عامل (+350)</span>}
+                      </h3>
+                      <span className="text-xs font-mono text-zinc-500 mt-0.5 block">{formatDate(log.work_date)}</span>
                     </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+                  </div>
+                  <button
+                    onClick={() => onTogglePaid(log, !log.is_paid)}
+                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[10px] font-bold transition-all shrink-0 ${
+                      log.is_paid 
+                      ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200" 
+                      : "bg-rose-100 text-rose-700 hover:bg-rose-200"
+                    }`}
+                  >
+                    {log.is_paid ? <><CheckCircle size={14} /> مدفوع</> : <><Wallet size={14} /> غير مدفوع</>}
+                  </button>
+                </div>
+
+                <div className="text-sm text-zinc-700 bg-zinc-50/50 p-3 rounded-xl border border-zinc-100 whitespace-pre-wrap">
+                  {log.description}
+                </div>
+                
+                <div className="flex justify-end gap-2 border-t border-zinc-100/50 pt-3 mt-1">
+                  <Button size="sm" variant="flat" color="default" className="font-semibold text-xs h-8 px-4" onClick={() => onEdit(log)}>
+                    تعديل
+                  </Button>
+                  <Button size="sm" variant="flat" color="danger" className="font-semibold text-xs h-8 px-4" onClick={() => onDelete(log.id)}>
+                    حذف
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
