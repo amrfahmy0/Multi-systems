@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { Plus, Trash2, ArrowRight, Image as ImageIcon, Camera } from "lucide-react";
+import { Plus, Trash2, ArrowRight, Image as ImageIcon, Camera, CheckCircle } from "lucide-react";
 import { AR, PROCUREMENT_CATEGORIES } from "@/config/constants";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { useProcurement } from "@/lib/hooks/use-procurement";
@@ -283,25 +283,27 @@ function AddProcurementModal({
           <label className="block text-xs font-semibold mb-1">
             {AR.procurement.invoiceImage} <span className="text-[#DC2626]">*</span>
           </label>
-          <div className="border border-dashed border-black p-4 text-center">
-            <Camera size={24} className="mx-auto mb-2 text-muted" />
+          <label className="border-2 border-dashed border-zinc-300 rounded-xl p-6 flex flex-col items-center justify-center bg-zinc-50/50 hover:bg-primary-50 hover:border-primary-300 transition-all cursor-pointer group">
+            <Camera size={28} className="text-zinc-400 group-hover:text-primary-500 mb-3 transition-colors" />
+            <span className="text-sm font-semibold text-zinc-600 group-hover:text-primary-700 text-center">اضغط لاختيار صورة الفاتورة</span>
+            <span className="text-xs text-zinc-400 mt-1 text-center">يمكنك الاختيار من المعرض أو التصوير</span>
             <input
               type="file"
               accept="image/*"
-              capture="environment"
+              className="hidden"
               onChange={(e) => {
                 setInvoiceFile(e.target.files?.[0] || null);
                 setInvoiceError("");
               }}
-              className="w-full text-xs"
             />
-          </div>
+          </label>
           {invoiceFile && (
-            <p className="text-xs text-muted mt-1 font-mono">
-              {invoiceFile.name} ({(invoiceFile.size / 1024).toFixed(0)}KB)
-            </p>
+             <div className="text-xs text-primary-600 font-semibold mt-2 flex items-center justify-center gap-1 bg-primary-50 p-2 rounded-lg border border-primary-100">
+               <CheckCircle size={14}/>
+               تم اختيار: {invoiceFile.name} ({(invoiceFile.size / 1024).toFixed(0)}KB)
+             </div>
           )}
-          {invoiceError && <p className="text-xs text-[#DC2626] mt-1">{invoiceError}</p>}
+          {invoiceError && <p className="text-xs text-rose-600 mt-1 text-center">{invoiceError}</p>}
         </div>
       </form>
     </Modal>
