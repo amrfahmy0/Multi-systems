@@ -25,6 +25,7 @@ export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) 
       onOpenChange={(open) => !open && onClose()}
       backdrop="blur"
       scrollBehavior="inside"
+      placement="top-center"
       classNames={{
         base: "bg-white",
         header: "border-b border-zinc-100 font-brand text-xl text-primary-900",
