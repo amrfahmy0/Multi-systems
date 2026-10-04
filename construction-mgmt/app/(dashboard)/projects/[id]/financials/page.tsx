@@ -1143,21 +1143,22 @@ function AddProcurementModal({
           <label className="block text-xs font-semibold text-zinc-700 mb-1.5">
             {AR.procurement.invoiceImage} <span className="text-zinc-400 font-normal">(اختياري)</span>
           </label>
-          <div className="border border-dashed border-zinc-300 rounded-xl p-4 text-center bg-zinc-50/50 hover:bg-zinc-50 transition-colors">
-            <Camera size={24} className="mx-auto mb-2 text-zinc-400" />
+          <label className="border-2 border-dashed border-zinc-300 rounded-xl p-6 flex flex-col items-center justify-center bg-zinc-50/50 hover:bg-primary-50 hover:border-primary-300 transition-all cursor-pointer group">
+            <Camera size={28} className="text-zinc-400 group-hover:text-primary-500 mb-3 transition-colors" />
+            <span className="text-sm font-semibold text-zinc-600 group-hover:text-primary-700 text-center">اضغط لاختيار صورة الفاتورة</span>
+            <span className="text-xs text-zinc-400 mt-1 text-center">يمكنك الاختيار من المعرض أو التصوير</span>
             <input
               type="file"
               accept="image/*"
               multiple
-              capture="environment"
+              className="hidden"
               onChange={(e) => {
                 const files = Array.from(e.target.files || []);
                 setInvoiceFiles((prev) => [...prev, ...files]);
                 setInvoiceError("");
               }}
-              className="w-full text-xs text-zinc-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 transition-all cursor-pointer"
             />
-          </div>
+          </label>
           
           {(invoiceFiles.length > 0 || existingInvoices.length > 0) && (
             <div className="flex flex-wrap gap-2 mt-3 bg-zinc-50 p-2 rounded-xl border border-zinc-200/60">
