@@ -42,7 +42,7 @@ export type ProcurementFormData = z.infer<typeof procurementSchema>;
 export const taskSchema = z.object({
   task_name: z.string().min(1, "اسم المهمة مطلوب"),
   phase: z.string().min(1, "المرحلة مطلوبة"),
-  task_dates: z.array(z.string()).optional().default([]),
+  task_dates: z.array(z.string()).optional(),
   status: z.enum(["pending", "in_progress", "completed", "blocked"]),
 });
 export type TaskFormData = z.infer<typeof taskSchema>;
