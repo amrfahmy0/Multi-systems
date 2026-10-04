@@ -914,12 +914,21 @@ function ProcurementTable({ items, onEdit, onDelete }: { items: ProcurementItem[
             </div>
 
             <div className="flex justify-between items-center border-t border-zinc-100 pt-3 mt-1">
-              <div className="flex gap-2 items-center">
+              <div className="flex flex-wrap gap-2 items-center">
                 <span className="text-xs font-mono bg-zinc-100 px-2 py-1 rounded-md text-zinc-600">{item.quantity} × {formatCurrency(Number(item.unit_price))}</span>
                 {item.invoice_urls && item.invoice_urls.length > 0 && (
-                  <button onClick={() => setSelectedImage(item.invoice_urls![0])} className="text-xs flex items-center gap-1 text-primary-600 font-semibold bg-primary-50 px-2 py-1 rounded-md hover:bg-primary-100">
-                    <ImageIcon size={12} /> فواتير
-                  </button>
+                  <div className="flex items-center gap-1">
+                    {item.invoice_urls.map((url, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setSelectedImage(url)}
+                        className="relative block w-8 h-8 rounded-md overflow-hidden border border-zinc-200 shadow-sm"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={url} alt={`Invoice ${idx + 1}`} className="object-cover w-full h-full" />
+                      </button>
+                    ))}
+                  </div>
                 )}
               </div>
               <div className="flex gap-2">
