@@ -749,10 +749,10 @@ function AddPaymentModal({ onClose, onSubmit, initialData }: { onClose: () => vo
   );
 }
 
-// ─── Add Expense Modal ─────────────────────────────────────────────
 function AddExpenseModal({ onClose, onSubmit, initialData }: { onClose: () => void; onSubmit: (data: GeneralExpenseFormData) => Promise<void>; initialData?: any }) {
   const [submitting, setSubmitting] = useState(false);
   const [customCategories, setCustomCategories] = useState<string[]>([]);
+  const [isCustomCategory, setIsCustomCategory] = useState(false);
 
   useEffect(() => {
     import("@/config/supabase/client").then(({ createClient }) => {
@@ -763,10 +763,12 @@ function AddExpenseModal({ onClose, onSubmit, initialData }: { onClose: () => vo
     });
   }, []);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<GeneralExpenseFormData>({
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<GeneralExpenseFormData>({
     resolver: zodResolver(generalExpenseSchema),
     defaultValues: initialData || { expense_date: new Date().toISOString().split("T")[0] },
   });
+
+  const { onChange: onCategoryChange, ...categoryReg } = register("category");
 
   const onFormSubmit = async (data: GeneralExpenseFormData) => {
     setSubmitting(true);
@@ -794,21 +796,42 @@ function AddExpenseModal({ onClose, onSubmit, initialData }: { onClose: () => vo
         </div>
         <div>
           <label className="block text-xs font-semibold text-zinc-700 mb-1.5">{AR.financial.category}</label>
-          <input 
-            list="expense-categories"
-            {...register("category")} 
-            className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" 
-            placeholder="اختر أو اكتب فئة جديدة..."
-            autoComplete="off"
-          />
-          <datalist id="expense-categories">
-            {EXPENSE_CATEGORIES.map((c) => (
-              <option key={c.value} value={c.value}>{c.label}</option>
-            ))}
-            {customCategories.filter(c => !EXPENSE_CATEGORIES.find(ec => ec.value === c)).map((c) => (
-              <option key={c} value={c} />
-            ))}
-          </datalist>
+          {!isCustomCategory ? (
+            <select
+              {...categoryReg}
+              onChange={(e) => {
+                if (e.target.value === "custom_other_category") {
+                  setIsCustomCategory(true);
+                  setValue("category", "");
+                } else {
+                  onCategoryChange(e);
+                }
+              }}
+              className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+            >
+              <option value="" disabled>اختر الفئة...</option>
+              {EXPENSE_CATEGORIES.map((c) => (
+                <option key={c.value} value={c.value}>{c.label}</option>
+              ))}
+              {customCategories.filter(c => !EXPENSE_CATEGORIES.find(ec => ec.value === c)).map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+              <option value="custom_other_category" className="font-bold text-primary-600">➕ كتابة فئة أخرى...</option>
+            </select>
+          ) : (
+            <div className="flex gap-2">
+              <input 
+                autoFocus
+                {...categoryReg}
+                onChange={onCategoryChange}
+                className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" 
+                placeholder="اكتب الفئة الجديدة هنا..."
+              />
+              <Button isIconOnly variant="flat" color="default" onPress={() => { setIsCustomCategory(false); setValue("category", ""); }}>
+                <X size={16} />
+              </Button>
+            </div>
+          )}
           {errors.category && <p className="text-xs text-rose-600 mt-1">{errors.category.message}</p>}
         </div>
         <div>
@@ -956,7 +979,6 @@ function ProcurementTable({ items, onEdit, onDelete }: { items: ProcurementItem[
   );
 }
 
-// ─── Add Procurement Modal ─────────────────────────────────────────
 function AddProcurementModal({
   onClose,
   onSubmit,
@@ -973,6 +995,7 @@ function AddProcurementModal({
   const [invoiceError, setInvoiceError] = useState("");
   const { addToast } = useToast();
   const [customCategories, setCustomCategories] = useState<string[]>([]);
+  const [isCustomCategory, setIsCustomCategory] = useState(false);
 
   useEffect(() => {
     import("@/config/supabase/client").then(({ createClient }) => {
@@ -987,11 +1010,14 @@ function AddProcurementModal({
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<ProcurementFormData>({
     resolver: zodResolver(procurementSchema),
     defaultValues: initialData || { procurement_date: new Date().toISOString().split("T")[0] },
   });
+
+  const { onChange: onCategoryChange, ...categoryReg } = register("category");
 
   const quantity = watch("quantity") || 0;
   const unitPrice = watch("unit_price") || 0;
@@ -1042,21 +1068,42 @@ function AddProcurementModal({
         </div>
         <div>
           <label className="block text-xs font-semibold text-zinc-700 mb-1.5">{AR.procurement.category}</label>
-          <input 
-            list="procurement-categories"
-            {...register("category")} 
-            className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
-            placeholder="اختر أو اكتب فئة جديدة..."
-            autoComplete="off"
-          />
-          <datalist id="procurement-categories">
-            {PROCUREMENT_CATEGORIES.map((c) => (
-              <option key={c.value} value={c.value}>{c.label}</option>
-            ))}
-            {customCategories.filter(c => !PROCUREMENT_CATEGORIES.find(pc => pc.value === c)).map((c) => (
-              <option key={c} value={c} />
-            ))}
-          </datalist>
+          {!isCustomCategory ? (
+            <select
+              {...categoryReg}
+              onChange={(e) => {
+                if (e.target.value === "custom_other_category") {
+                  setIsCustomCategory(true);
+                  setValue("category", "");
+                } else {
+                  onCategoryChange(e);
+                }
+              }}
+              className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+            >
+              <option value="" disabled>اختر الفئة...</option>
+              {PROCUREMENT_CATEGORIES.map((c) => (
+                <option key={c.value} value={c.value}>{c.label}</option>
+              ))}
+              {customCategories.filter(c => !PROCUREMENT_CATEGORIES.find(pc => pc.value === c)).map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+              <option value="custom_other_category" className="font-bold text-primary-600">➕ كتابة فئة أخرى...</option>
+            </select>
+          ) : (
+            <div className="flex gap-2">
+              <input 
+                autoFocus
+                {...categoryReg}
+                onChange={onCategoryChange}
+                className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" 
+                placeholder="اكتب الفئة الجديدة هنا..."
+              />
+              <Button isIconOnly variant="flat" color="default" onPress={() => { setIsCustomCategory(false); setValue("category", ""); }}>
+                <X size={16} />
+              </Button>
+            </div>
+          )}
           {errors.category && <p className="text-xs text-rose-600 mt-1">{errors.category.message}</p>}
         </div>
         <div>
