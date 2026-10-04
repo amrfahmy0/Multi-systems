@@ -4,10 +4,7 @@ import { Providers } from "@/components/providers";
 
 export const metadata: Metadata = {
   title: "Multi Systems | Construction Management",
-  description: "نظام شامل لإدارة مشاريع التشطيبات السكنية - المالية والمشتريات والمهام والمستندات",
-  icons: {
-    icon: "/logo.png",
-  },
+  description: "مالتي سيستمز - الشركة الرائدة في أعمال التشطيبات السكنية والمقاولات العامة. نقدم حلولاً متكاملة لإدارة المشاريع باحترافية.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
