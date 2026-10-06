@@ -356,21 +356,21 @@ function QuotationForm({ project }: { project: Project | null }) {
         </div>
         <div>
           <label className="block text-xs font-semibold mb-1.5 text-zinc-700">اسم العميل</label>
-          <input {...register("client_name")} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" placeholder="اسم العميل" />
+          <input readOnly {...register("client_name")} className="w-full bg-zinc-100/50 text-zinc-500 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none cursor-not-allowed" />
           {errors.client_name && <p className="text-xs text-rose-600 mt-1">{errors.client_name.message}</p>}
         </div>
         <div>
           <label className="block text-xs font-semibold mb-1.5 text-zinc-700">اسم المشروع</label>
-          <input {...register("project_name")} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" placeholder="المشروع" />
+          <input readOnly {...register("project_name")} className="w-full bg-zinc-100/50 text-zinc-500 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none cursor-not-allowed" />
           {errors.project_name && <p className="text-xs text-rose-600 mt-1">{errors.project_name.message}</p>}
         </div>
         <div>
           <label className="block text-xs font-semibold mb-1.5 text-zinc-700">الموقع</label>
-          <input {...register("location")} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" placeholder="مثال: كمبوند سيليا" />
+          <input readOnly {...register("location")} className="w-full bg-zinc-100/50 text-zinc-500 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none cursor-not-allowed" />
         </div>
         <div className="md:col-span-2">
           <label className="block text-xs font-semibold mb-1.5 text-zinc-700">الشركة المنفذة</label>
-          <input {...register("company_name")} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
+          <input readOnly {...register("company_name")} className="w-full bg-zinc-100/50 text-zinc-500 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none cursor-not-allowed" />
           {errors.company_name && <p className="text-xs text-rose-600 mt-1">{errors.company_name.message}</p>}
         </div>
       </div>
@@ -831,15 +831,15 @@ function PaymentCertForm({ project }: { project: Project | null }) {
         </div>
         <div>
           <label className="block text-xs font-semibold mb-1.5 text-zinc-700">اسم العميل</label>
-          <input {...register("client_name")} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
+          <input readOnly {...register("client_name")} className="w-full bg-zinc-100/50 text-zinc-500 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none cursor-not-allowed" />
         </div>
         <div className="sm:col-span-2">
           <label className="block text-xs font-semibold mb-1.5 text-zinc-700">المشروع</label>
-          <input {...register("project_name")} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
+          <input readOnly {...register("project_name")} className="w-full bg-zinc-100/50 text-zinc-500 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none cursor-not-allowed" />
         </div>
         <div>
           <label className="block text-xs font-semibold mb-1.5 text-zinc-700">الشركة المنفذة</label>
-          <input {...register("company_name")} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
+          <input readOnly {...register("company_name")} className="w-full bg-zinc-100/50 text-zinc-500 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none cursor-not-allowed" />
         </div>
       </div>
 
