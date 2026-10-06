@@ -119,3 +119,16 @@ ALTER TABLE general_expenses DISABLE ROW LEVEL SECURITY;
 ALTER TABLE procurement_log DISABLE ROW LEVEL SECURITY;
 ALTER TABLE project_tasks DISABLE ROW LEVEL SECURITY;
 ALTER TABLE documents DISABLE ROW LEVEL SECURITY;
+
+-- ─── Storage Bucket (Prototype Mode) ───────────────────────────────
+-- Ensure the receipts bucket exists and is public
+INSERT INTO storage.buckets (id, name, public) VALUES ('receipts', 'receipts', true) ON CONFLICT DO NOTHING;
+
+-- Create policies to allow uploading and deleting images
+DROP POLICY IF EXISTS "Public Access" ON storage.objects;
+DROP POLICY IF EXISTS "Public Insert" ON storage.objects;
+DROP POLICY IF EXISTS "Public Delete" ON storage.objects;
+
+CREATE POLICY "Public Access" ON storage.objects FOR SELECT USING (bucket_id = 'receipts');
+CREATE POLICY "Public Insert" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'receipts');
+CREATE POLICY "Public Delete" ON storage.objects FOR DELETE USING (bucket_id = 'receipts');
