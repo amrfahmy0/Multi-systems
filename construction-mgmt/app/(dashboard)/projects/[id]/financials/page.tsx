@@ -137,34 +137,34 @@ export default function FinancialsPage() {
       </div>
 
       {/* Premium Header with Stats */}
-      <div className="relative rounded-3xl bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 p-8 text-white shadow-xl mb-8">
+      <div className="relative rounded-2xl md:rounded-3xl bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 p-4 md:p-8 text-white shadow-xl mb-4 md:mb-8">
         {/* Header Top Section */}
-        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 border-b border-white/10 pb-6">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-primary-500/20 text-primary-300 flex items-center justify-center shrink-0 border border-primary-500/30">
-              <Wallet size={28} />
+        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6 mb-4 md:mb-8 border-b border-white/10 pb-4 md:pb-6">
+          <div className="flex items-center gap-3 md:gap-4">
+            <div className="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-primary-500/20 text-primary-300 flex items-center justify-center shrink-0 border border-primary-500/30">
+              <Wallet className="w-5 h-5 md:w-7 md:h-7" />
             </div>
             <div>
-              <h1 className="text-3xl font-heading font-black tracking-tight text-white">{AR.financial.title}</h1>
-              <p className="text-zinc-400 text-sm mt-1">نظرة شاملة على جميع الحركات المالية، المستخلصات والمشتريات</p>
+              <h1 className="text-xl md:text-3xl font-heading font-black tracking-tight text-white">{AR.financial.title}</h1>
+              <p className="text-zinc-400 text-[11px] md:text-sm mt-0.5 md:mt-1">نظرة شاملة على جميع الحركات المالية، المستخلصات والمشتريات</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3 w-full md:w-auto mt-2 md:mt-0">
             <button 
               onClick={() => setShowSensitive(!showSensitive)} 
-              className="flex items-center justify-center w-12 h-12 text-zinc-300 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all"
+              className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 text-zinc-300 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all shrink-0"
               title={showSensitive ? "إخفاء المبالغ" : "إظهار المبالغ"}
             >
-              {showSensitive ? <EyeOff size={20} /> : <Eye size={20} />}
+              {showSensitive ? <EyeOff size={18} className="md:w-5 md:h-5" /> : <Eye size={18} className="md:w-5 md:h-5" />}
             </button>
             <Button 
               size="md"
               color="primary" 
               variant="shadow" 
-              startContent={<Plus size={18} />} 
+              startContent={<Plus size={16} className="md:w-4 md:h-4" />} 
               onClick={() => { setEditTarget(null); setShowAddModal(true); }}
-              className="font-bold shadow-primary-500/30 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500 px-6 transition-all h-12"
+              className="flex-1 md:flex-none font-bold shadow-primary-500/30 rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500 px-4 md:px-6 transition-all h-10 md:h-12 text-xs md:text-sm"
             >
               {activeTab === "payments" ? AR.financial.addPayment : 
                activeTab === "expenses" ? AR.financial.addExpense : 
@@ -175,53 +175,53 @@ export default function FinancialsPage() {
         </div>
 
         {/* Quick Stats Grid */}
-        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-5 flex flex-col gap-2 hover:bg-white/10 transition-colors">
-            <div className="flex items-center gap-2 text-emerald-400">
-              <Receipt size={16} />
-              <span className="text-xs font-semibold uppercase tracking-wider">{AR.financial.clientPayments}</span>
+        <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-4">
+          <div className="bg-white/5 backdrop-blur-md rounded-xl md:rounded-2xl border border-white/10 p-3 md:p-5 flex flex-col gap-1 md:gap-2 hover:bg-white/10 transition-colors">
+            <div className="flex items-center gap-1.5 md:gap-2 text-emerald-400">
+              <Receipt size={14} className="md:w-4 md:h-4" />
+              <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider">{AR.financial.clientPayments}</span>
             </div>
-            <span className="text-2xl font-bold font-mono tracking-tight" title={showSensitive ? formatCurrency(totalPayments) : "******"}>
+            <span className="text-sm md:text-2xl font-bold font-mono tracking-tight" title={showSensitive ? formatCurrency(totalPayments) : "******"}>
               {showSensitive ? formatCurrency(totalPayments) : "******"}
             </span>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-5 flex flex-col gap-2 hover:bg-white/10 transition-colors">
-            <div className="flex items-center gap-2 text-primary-400">
-              <ShoppingCart size={16} />
-              <span className="text-xs font-semibold uppercase tracking-wider">{AR.nav.procurement}</span>
+          <div className="bg-white/5 backdrop-blur-md rounded-xl md:rounded-2xl border border-white/10 p-3 md:p-5 flex flex-col gap-1 md:gap-2 hover:bg-white/10 transition-colors">
+            <div className="flex items-center gap-1.5 md:gap-2 text-primary-400">
+              <ShoppingCart size={14} className="md:w-4 md:h-4" />
+              <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider">{AR.nav.procurement}</span>
             </div>
-            <span className="text-2xl font-bold font-mono tracking-tight text-zinc-100" title={formatCurrency(totalProcurement)}>
+            <span className="text-sm md:text-2xl font-bold font-mono tracking-tight text-zinc-100" title={formatCurrency(totalProcurement)}>
               {formatCurrency(totalProcurement)}
             </span>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-5 flex flex-col gap-2 hover:bg-white/10 transition-colors">
-            <div className="flex items-center gap-2 text-rose-400">
-              <TrendingDown size={16} />
-              <span className="text-xs font-semibold uppercase tracking-wider">مصروفات التشغيل</span>
+          <div className="bg-white/5 backdrop-blur-md rounded-xl md:rounded-2xl border border-white/10 p-3 md:p-5 flex flex-col gap-1 md:gap-2 hover:bg-white/10 transition-colors">
+            <div className="flex items-center gap-1.5 md:gap-2 text-rose-400">
+              <TrendingDown size={14} className="md:w-4 md:h-4" />
+              <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider">مصروفات التشغيل</span>
             </div>
-            <span className="text-2xl font-bold font-mono tracking-tight text-zinc-100" title={formatCurrency(pureExpenses)}>
+            <span className="text-sm md:text-2xl font-bold font-mono tracking-tight text-zinc-100" title={formatCurrency(pureExpenses)}>
               {formatCurrency(pureExpenses)}
             </span>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 p-5 flex flex-col gap-2 hover:bg-white/10 transition-colors">
-            <div className="flex items-center gap-2 text-amber-400">
-              <Banknote size={16} />
-              <span className="text-xs font-semibold uppercase tracking-wider">إجمالي المنصرف</span>
+          <div className="bg-white/5 backdrop-blur-md rounded-xl md:rounded-2xl border border-white/10 p-3 md:p-5 flex flex-col gap-1 md:gap-2 hover:bg-white/10 transition-colors">
+            <div className="flex items-center gap-1.5 md:gap-2 text-amber-400">
+              <Banknote size={14} className="md:w-4 md:h-4" />
+              <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider">إجمالي المنصرف</span>
             </div>
-            <span className="text-2xl font-bold font-mono tracking-tight text-zinc-100" title={formatCurrency(totalExpenses)}>
+            <span className="text-sm md:text-2xl font-bold font-mono tracking-tight text-zinc-100" title={formatCurrency(totalExpenses)}>
               {formatCurrency(totalExpenses)}
             </span>
           </div>
 
-          <div className="bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-2xl border border-zinc-700 p-5 flex flex-col gap-2 shadow-inner relative overflow-hidden">
-            <div className="flex items-center gap-2 text-zinc-300 relative z-10">
-              <Wallet size={16} />
-              <span className="text-xs font-semibold uppercase tracking-wider">الصافي</span>
+          <div className="bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-xl md:rounded-2xl border border-zinc-700 p-3 md:p-5 flex flex-col gap-1 md:gap-2 shadow-inner relative overflow-hidden col-span-2 sm:col-span-1 lg:col-span-1">
+            <div className="flex items-center gap-1.5 md:gap-2 text-zinc-300 relative z-10">
+              <Wallet size={14} className="md:w-4 md:h-4" />
+              <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider">الصافي</span>
             </div>
-            <span className={`text-2xl font-bold font-mono tracking-tight relative z-10 ${netAmount >= 0 ? 'text-emerald-400' : 'text-rose-400'}`} title={showSensitive ? formatCurrency(netAmount) : "******"}>
+            <span className={`text-base md:text-2xl font-bold font-mono tracking-tight relative z-10 ${netAmount >= 0 ? 'text-emerald-400' : 'text-rose-400'}`} title={showSensitive ? formatCurrency(netAmount) : "******"}>
               {showSensitive ? formatCurrency(netAmount) : "******"}
             </span>
           </div>
