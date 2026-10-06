@@ -11,6 +11,8 @@ export interface Project {
   name: string;
   client_name: string;
   location: string | null;
+  supervisor_daily_wage: number;
+  laborer_daily_wage: number;
   status: ProjectStatus;
   start_date: string;
   created_at: string;
@@ -65,7 +67,7 @@ export interface SupervisorLog {
   work_date: string;
   day_name: string;
   description: string;
-  has_laborer: boolean;
+  laborers_count: number;
   is_paid: boolean;
   created_at: string;
 }

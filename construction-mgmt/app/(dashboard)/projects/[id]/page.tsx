@@ -212,6 +212,8 @@ function EditProjectModal({
       name: project.name,
       client_name: project.client_name,
       location: project.location || "",
+      supervisor_daily_wage: project.supervisor_daily_wage || 750,
+      laborer_daily_wage: project.laborer_daily_wage || 350,
       status: project.status,
       start_date: project.start_date,
     },
@@ -270,6 +272,26 @@ function EditProjectModal({
             className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" 
             placeholder="مثال: العاصمة الإدارية - كمبوند سيليا" 
           />
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-semibold text-zinc-700 mb-1.5">يومية المشرف (ج.م)</label>
+            <input 
+              type="number"
+              {...register("supervisor_daily_wage", { valueAsNumber: true })} 
+              className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all font-mono" 
+            />
+            {errors.supervisor_daily_wage && <p className="text-xs text-rose-600 mt-1">{errors.supervisor_daily_wage.message}</p>}
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-zinc-700 mb-1.5">يومية العامل (ج.م)</label>
+            <input 
+              type="number"
+              {...register("laborer_daily_wage", { valueAsNumber: true })} 
+              className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all font-mono" 
+            />
+            {errors.laborer_daily_wage && <p className="text-xs text-rose-600 mt-1">{errors.laborer_daily_wage.message}</p>}
+          </div>
         </div>
         <div>
           <label className="block text-xs font-semibold text-zinc-700 mb-1.5">{AR.project.startDate}</label>

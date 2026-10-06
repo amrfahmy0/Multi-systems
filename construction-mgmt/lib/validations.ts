@@ -5,6 +5,8 @@ export const projectSchema = z.object({
   name: z.string().min(1, "اسم المشروع مطلوب"),
   client_name: z.string().min(1, "اسم العميل مطلوب"),
   location: z.string().optional(),
+  supervisor_daily_wage: z.number().min(0).default(750),
+  laborer_daily_wage: z.number().min(0).default(350),
   status: z.enum(["active", "completed", "on_hold", "cancelled"]),
   start_date: z.string().min(1, "تاريخ البدء مطلوب"),
 });
@@ -52,7 +54,7 @@ export const supervisorLogSchema = z.object({
   work_date: z.string().min(1, "التاريخ مطلوب"),
   day_name: z.string().optional(),
   description: z.string().min(1, "الوصف مطلوب"),
-  has_laborer: z.boolean().default(false),
+  laborers_count: z.number().min(0).default(0),
 });
 export type SupervisorLogFormData = z.infer<typeof supervisorLogSchema>;
 

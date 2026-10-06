@@ -8,7 +8,8 @@ import { AR, EXPENSE_CATEGORIES, PROCUREMENT_CATEGORIES } from "@/config/constan
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { useFinancials } from "@/lib/hooks/use-financials";
 import { useProcurement } from "@/lib/hooks/use-procurement";
-import type { ClientPayment, GeneralExpense, ProcurementItem, SupervisorLog } from "@/lib/types";
+import { useProjects } from "@/lib/hooks/use-projects";
+import type { ClientPayment, GeneralExpense, ProcurementItem, SupervisorLog, ProjectWithFinancials } from "@/lib/types";
 import { Modal, ConfirmModal } from "@/components/modal";
 import { useToast } from "@/components/toast-provider";
 import { useForm } from "react-hook-form";
@@ -43,6 +44,7 @@ export default function FinancialsPage() {
   const params = useParams();
   const projectId = params.id as string;
   const [activeTab, setActiveTab] = useState<Tab>("payments");
+  const [project, setProject] = useState<ProjectWithFinancials | null>(null);
   const [payments, setPayments] = useState<ClientPayment[]>([]);
   const [expenses, setExpenses] = useState<GeneralExpense[]>([]);
   const [procurementItems, setProcurementItems] = useState<ProcurementItem[]>([]);
@@ -70,16 +72,18 @@ export default function FinancialsPage() {
     toggleSupervisorPaid,
   } = useFinancials(projectId);
   const { fetchItems: fetchProcurement, addItem: addProcurement, updateItem: updateProcurement, deleteItem: deleteProcurement } = useProcurement(projectId);
+  const { fetchProjectWithFinancials } = useProjects();
   const { addToast } = useToast();
 
   const loadAll = async () => {
     setIsLoading(true);
     try {
-      const [p, e, proc, sup] = await Promise.all([fetchPayments(), fetchExpenses(), fetchProcurement(), fetchSupervisorLogs()]);
+      const [p, e, proc, sup, proj] = await Promise.all([fetchPayments(), fetchExpenses(), fetchProcurement(), fetchSupervisorLogs(), fetchProjectWithFinancials(projectId)]);
       setPayments(p);
       setExpenses(e);
       setProcurementItems(proc);
       setSupervisorLogs(sup);
+      setProject(proj as ProjectWithFinancials);
     } catch {
       addToast(AR.general.error, "error");
     } finally {
@@ -265,9 +269,10 @@ export default function FinancialsPage() {
           {activeTab === "procurement" && (
             <ProcurementTable items={procurementItems} onEdit={(data) => { setEditTarget({ id: data.id, type: "procurement", data }); setShowAddModal(true); }} onDelete={(id) => setDeleteTarget({ id, type: "procurement" })} />
           )}
-          {activeTab === "supervisor" && (
+          {activeTab === "supervisor" && project && (
             <SupervisorTable 
               logs={supervisorLogs} 
+              project={project}
               onEdit={(data) => { setEditTarget({ id: data.id, type: "supervisor", data }); setShowAddModal(true); }}
               onDelete={(id) => setDeleteTarget({ id, type: "supervisor" })} 
               onTogglePaid={async (log, status) => {
@@ -332,8 +337,9 @@ export default function FinancialsPage() {
           }}
         />
       )}
-      {showAddModal && activeTab === "supervisor" && (
+      {showAddModal && activeTab === "supervisor" && project && (
         <AddSupervisorModal
+          project={project}
           onClose={() => setShowAddModal(false)}
           initialData={editTarget?.data}
           onSubmit={async (data) => {
@@ -1199,11 +1205,11 @@ function AddProcurementModal({
 }
 
 // ─── Supervisor Logs Table ───────────────────────────────────────
-function SupervisorTable({ logs, onEdit, onDelete, onTogglePaid }: { logs: SupervisorLog[]; onEdit: (item: SupervisorLog) => void; onDelete: (id: string) => void; onTogglePaid: (log: SupervisorLog, status: boolean) => void }) {
+function SupervisorTable({ logs, project, onEdit, onDelete, onTogglePaid }: { logs: SupervisorLog[]; project: ProjectWithFinancials; onEdit: (item: SupervisorLog) => void; onDelete: (id: string) => void; onTogglePaid: (log: SupervisorLog, status: boolean) => void }) {
   const totalDays = logs.length;
   const unpaidDays = logs.filter(l => !l.is_paid).length;
-  const totalPaidAmount = logs.filter(l => l.is_paid).reduce((sum, l) => sum + (l.has_laborer ? 1100 : 750), 0);
-  const totalUnpaidAmount = logs.filter(l => !l.is_paid).reduce((sum, l) => sum + (l.has_laborer ? 1100 : 750), 0);
+  const totalPaidAmount = logs.filter(l => l.is_paid).reduce((sum, l) => sum + (project.supervisor_daily_wage + (l.laborers_count * project.laborer_daily_wage)), 0);
+  const totalUnpaidAmount = logs.filter(l => !l.is_paid).reduce((sum, l) => sum + (project.supervisor_daily_wage + (l.laborers_count * project.laborer_daily_wage)), 0);
 
   return (
     <div>
@@ -1268,7 +1274,7 @@ function SupervisorTable({ logs, onEdit, onDelete, onTogglePaid }: { logs: Super
                           <span className="font-semibold text-zinc-900 text-sm">{log.day_name}</span>
                           <span className="font-mono text-zinc-500 text-xs">({formatDate(log.work_date)})</span>
                         </div>
-                        {log.has_laborer && <span className="text-[10px] bg-indigo-100 text-indigo-700 w-fit px-1.5 py-0.5 rounded font-bold">مع عامل (+350 ج)</span>}
+                        {log.laborers_count > 0 && <span className="text-[10px] bg-indigo-100 text-indigo-700 w-fit px-1.5 py-0.5 rounded font-bold">مع {log.laborers_count} عامل (+{log.laborers_count * project.laborer_daily_wage} ج)</span>}
                       </div>
                     </TableCell>
                     <TableCell className="text-sm text-zinc-700 whitespace-pre-wrap">{log.description}</TableCell>
@@ -1311,7 +1317,7 @@ function SupervisorTable({ logs, onEdit, onDelete, onTogglePaid }: { logs: Super
                     <div>
                       <h3 className="text-sm font-bold text-zinc-800 flex items-center gap-2">
                         {log.day_name}
-                        {log.has_laborer && <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-bold">مع عامل (+350)</span>}
+                        {log.laborers_count > 0 && <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-bold">{log.laborers_count} عامل (+{log.laborers_count * project.laborer_daily_wage})</span>}
                       </h3>
                       <span className="text-xs font-mono text-zinc-500 mt-0.5 block">{formatDate(log.work_date)}</span>
                     </div>
@@ -1354,10 +1360,12 @@ function AddSupervisorModal({
   onClose,
   onSubmit,
   initialData,
+  project,
 }: {
   onClose: () => void;
   onSubmit: (data: SupervisorLogFormData) => Promise<void>;
   initialData?: any;
+  project: ProjectWithFinancials;
 }) {
   const [submitting, setSubmitting] = useState(false);
   const { addToast } = useToast();
@@ -1365,11 +1373,14 @@ function AddSupervisorModal({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<any>({
     resolver: zodResolver(supervisorLogSchema) as any,
-    defaultValues: initialData || { work_date: new Date().toISOString().split("T")[0] },
+    defaultValues: initialData || { work_date: new Date().toISOString().split("T")[0], laborers_count: 0 },
   });
+
+  const laborersCount = watch("laborers_count") || 0;
 
   const onFormSubmit = async (data: SupervisorLogFormData) => {
     setSubmitting(true);
@@ -1412,13 +1423,17 @@ function AddSupervisorModal({
           {errors.description && <p className="text-xs text-rose-600 mt-1">{String(errors.description.message)}</p>}
         </div>
         
-        <label className="flex items-center gap-3 p-3 bg-indigo-50/50 border border-indigo-100 rounded-xl cursor-pointer hover:bg-indigo-50 transition-colors">
-          <input type="checkbox" {...register("has_laborer")} className="w-4 h-4 text-indigo-600 rounded border-indigo-300 focus:ring-indigo-600" />
-          <div className="flex flex-col">
-            <span className="text-sm font-bold text-indigo-900">يوجد عامل مساعد</span>
-            <span className="text-xs text-indigo-600 font-mono">+350 ج يومية إضافية</span>
+        <div className="p-4 bg-indigo-50/50 border border-indigo-100 rounded-xl transition-colors">
+          <label className="block text-xs font-bold text-indigo-900 mb-2">عدد العمال المساعدين</label>
+          <div className="flex items-center gap-3">
+            <input type="number" min="0" {...register("laborers_count", { valueAsNumber: true })} className="w-24 bg-white border border-indigo-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
+            <div className="flex flex-col">
+              <span className="text-[10px] text-indigo-600 font-bold">عامل</span>
+              {laborersCount > 0 && <span className="text-[10px] text-indigo-500 font-mono">+{laborersCount * project.laborer_daily_wage} ج.م إضافية</span>}
+            </div>
           </div>
-        </label>
+          {errors.laborers_count && <p className="text-xs text-rose-600 mt-1">{String(errors.laborers_count.message)}</p>}
+        </div>
       </form>
     </Modal>
   );

@@ -188,17 +188,27 @@ export function useFinancials(projectId: string) {
       setLoading(true);
       try {
         const supabase = createClient();
+        
+        // Fetch project to get the wages
+        const { data: project, error: pError } = await supabase
+          .from("projects")
+          .select("supervisor_daily_wage, laborer_daily_wage")
+          .eq("id", log.project_id)
+          .single();
+          
+        if (pError || !project) throw pError || new Error("Project not found");
+
         const { error } = await supabase.from("supervisor_logs").update({ is_paid }).eq("id", log.id);
         if (error) throw error;
 
-        const amount = log.has_laborer ? 1100 : 750;
-        const descPrefix = log.has_laborer ? "يومية إشراف وعامل" : "يومية إشراف";
+        const amount = project.supervisor_daily_wage + (log.laborers_count * project.laborer_daily_wage);
+        const descPrefix = log.laborers_count > 0 ? `يومية إشراف و ${log.laborers_count} عمال` : "يومية إشراف";
         const description = `${descPrefix}: ${log.day_name}`;
         
         if (is_paid) {
           // Insert matching expense
           const { error: expError } = await supabase.from("general_expenses").insert({
-            project_id: projectId,
+            project_id: log.project_id,
             amount,
             category: "supervisor_wage",
             description,
@@ -208,7 +218,7 @@ export function useFinancials(projectId: string) {
         } else {
           // Delete matching expense
           const { error: expError } = await supabase.from("general_expenses").delete()
-            .eq("project_id", projectId)
+            .eq("project_id", log.project_id)
             .eq("amount", amount)
             .eq("category", "supervisor_wage")
             .eq("description", description)

@@ -32,6 +32,8 @@ CREATE TABLE projects (
   name TEXT NOT NULL,
   client_name TEXT NOT NULL,
   location TEXT,
+  supervisor_daily_wage NUMERIC(10,2) NOT NULL DEFAULT 750,
+  laborer_daily_wage NUMERIC(10,2) NOT NULL DEFAULT 350,
   status project_status NOT NULL DEFAULT 'active',
   start_date DATE NOT NULL DEFAULT CURRENT_DATE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -90,7 +92,7 @@ CREATE TABLE supervisor_logs (
   work_date DATE NOT NULL DEFAULT CURRENT_DATE,
   day_name TEXT NOT NULL,
   description TEXT NOT NULL,
-  has_laborer BOOLEAN NOT NULL DEFAULT false,
+  laborers_count INTEGER NOT NULL DEFAULT 0,
   is_paid BOOLEAN NOT NULL DEFAULT false,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
