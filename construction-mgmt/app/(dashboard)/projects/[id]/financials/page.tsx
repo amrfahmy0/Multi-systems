@@ -469,6 +469,9 @@ function ExpensesTable({ expenses, onEdit, onDelete }: { expenses: GeneralExpens
   }
 
   const categoryLabel = (value: string) => {
+    if (value === "supervisor_wage" || value === "يومية إشراف") return "يوميات المشرف";
+    if (value === "procurement") return "مشتريات";
+    
     const expCat = EXPENSE_CATEGORIES.find((c) => c.value === value);
     if (expCat) return expCat.label;
     const procCat = PROCUREMENT_CATEGORIES.find((c) => c.value === value);
