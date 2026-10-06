@@ -161,10 +161,10 @@ export const PROJECT_STATUSES = [
 
 // ─── Image Compression Config ──────────────────────────────────────
 export const IMAGE_COMPRESSION_OPTIONS = {
-  maxSizeMB: 0.1, // ~100KB
-  maxWidthOrHeight: 1200,
+  maxSizeMB: 0.5, // ~500KB for better readability of invoice text
+  maxWidthOrHeight: 1600,
   useWebWorker: true,
-  fileType: "image/webp" as const,
+  fileType: "image/jpeg" as const, // iOS Safari canvas export doesn't fully support WebP, causing aggressive PNG downscaling
 };
 
 // ─── Table Headers ─────────────────────────────────────────────────

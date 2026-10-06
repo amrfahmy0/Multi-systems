@@ -11,14 +11,14 @@ export async function compressAndUploadImage(
 
   // Generate unique filename
   const timestamp = Date.now();
-  const filename = `${timestamp}_${Math.random().toString(36).slice(2, 8)}.webp`;
+  const filename = `${timestamp}_${Math.random().toString(36).slice(2, 8)}.jpg`;
 
   // Upload to Supabase Storage
   const supabase = createClient();
   const { data, error } = await supabase.storage
     .from(bucket)
     .upload(filename, compressed, {
-      contentType: "image/webp",
+      contentType: compressed.type,
       upsert: false,
     });
 
