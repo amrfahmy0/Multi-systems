@@ -37,6 +37,7 @@ import {
   Button,
   Chip
 } from "@nextui-org/react";
+import { NumberInput } from "@/components/ui/number-input";
 
 type Tab = "payments" | "expenses" | "procurement" | "supervisor";
 
@@ -739,7 +740,7 @@ function AddPaymentModal({ onClose, onSubmit, initialData }: { onClose: () => vo
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(onFormSubmit)}>
         <div>
           <label className="block text-xs font-semibold text-zinc-700 mb-1.5">{AR.financial.amount}</label>
-          <input type="number" step="0.01" {...register("amount", { valueAsNumber: true })} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
+          <NumberInput step="0.01" {...register("amount", { valueAsNumber: true })} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
           {errors.amount && <p className="text-xs text-rose-600 mt-1">{errors.amount.message}</p>}
         </div>
         <div>
@@ -800,7 +801,7 @@ function AddExpenseModal({ onClose, onSubmit, initialData }: { onClose: () => vo
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(onFormSubmit)}>
         <div>
           <label className="block text-xs font-semibold text-zinc-700 mb-1.5">{AR.financial.amount}</label>
-          <input type="number" step="0.01" {...register("amount", { valueAsNumber: true })} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
+          <NumberInput step="0.01" {...register("amount", { valueAsNumber: true })} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
           {errors.amount && <p className="text-xs text-rose-600 mt-1">{errors.amount.message}</p>}
         </div>
         <div>
@@ -1126,12 +1127,12 @@ function AddProcurementModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-xs font-semibold text-zinc-700 mb-1.5">{AR.procurement.quantity}</label>
-            <input type="number" step="0.01" {...register("quantity", { valueAsNumber: true })} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
+            <NumberInput step="0.01" {...register("quantity", { valueAsNumber: true })} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
             {errors.quantity && <p className="text-xs text-rose-600 mt-1">{errors.quantity.message}</p>}
           </div>
           <div>
             <label className="block text-xs font-semibold text-zinc-700 mb-1.5">{AR.procurement.unitPrice}</label>
-            <input type="number" step="0.01" {...register("unit_price", { valueAsNumber: true })} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
+            <NumberInput step="0.01" {...register("unit_price", { valueAsNumber: true })} className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all" />
             {errors.unit_price && <p className="text-xs text-rose-600 mt-1">{errors.unit_price.message}</p>}
           </div>
         </div>
@@ -1426,7 +1427,7 @@ function AddSupervisorModal({
         <div className="p-4 bg-indigo-50/50 border border-indigo-100 rounded-xl transition-colors">
           <label className="block text-xs font-bold text-indigo-900 mb-2">عدد العمال المساعدين</label>
           <div className="flex items-center gap-3">
-            <input type="number" min="0" {...register("laborers_count", { valueAsNumber: true })} className="w-24 bg-white border border-indigo-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
+            <NumberInput min="0" {...register("laborers_count", { valueAsNumber: true })} className="w-24 bg-white border border-indigo-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" />
             <div className="flex flex-col">
               <span className="text-[10px] text-indigo-600 font-bold">عامل</span>
               {laborersCount > 0 && <span className="text-[10px] text-indigo-500 font-mono">+{laborersCount * project.laborer_daily_wage} ج.م إضافية</span>}

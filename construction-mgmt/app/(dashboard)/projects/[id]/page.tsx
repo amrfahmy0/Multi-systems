@@ -31,6 +31,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { projectSchema, type ProjectFormData } from "@/lib/validations";
 import { Button } from "@nextui-org/react";
+import { NumberInput } from "@/components/ui/number-input";
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -276,8 +277,7 @@ function EditProjectModal({
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-semibold text-zinc-700 mb-1.5">يومية المشرف (ج.م)</label>
-            <input 
-              type="number"
+            <NumberInput 
               {...register("supervisor_daily_wage", { valueAsNumber: true })} 
               className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all font-mono" 
             />
@@ -285,8 +285,7 @@ function EditProjectModal({
           </div>
           <div>
             <label className="block text-xs font-semibold text-zinc-700 mb-1.5">يومية العامل (ج.م)</label>
-            <input 
-              type="number"
+            <NumberInput 
               {...register("laborer_daily_wage", { valueAsNumber: true })} 
               className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all font-mono" 
             />

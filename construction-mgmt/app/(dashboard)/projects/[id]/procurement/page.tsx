@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { procurementSchema, type ProcurementFormData } from "@/lib/validations";
 import { compressAndUploadImage } from "@/lib/upload";
+import { NumberInput } from "@/components/ui/number-input";
 import {
   Table,
   TableHeader,
@@ -260,12 +261,12 @@ function AddProcurementModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-xs font-semibold mb-1">{AR.procurement.quantity}</label>
-            <input type="number" step="0.01" {...register("quantity", { valueAsNumber: true })} className="w-full" />
+            <NumberInput step="0.01" {...register("quantity", { valueAsNumber: true })} className="w-full" />
             {errors.quantity && <p className="text-xs text-[#DC2626] mt-1">{errors.quantity.message}</p>}
           </div>
           <div>
             <label className="block text-xs font-semibold mb-1">{AR.procurement.unitPrice}</label>
-            <input type="number" step="0.01" {...register("unit_price", { valueAsNumber: true })} className="w-full" />
+            <NumberInput step="0.01" {...register("unit_price", { valueAsNumber: true })} className="w-full" />
             {errors.unit_price && <p className="text-xs text-[#DC2626] mt-1">{errors.unit_price.message}</p>}
           </div>
         </div>

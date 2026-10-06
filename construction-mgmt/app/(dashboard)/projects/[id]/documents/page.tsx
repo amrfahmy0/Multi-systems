@@ -15,6 +15,7 @@ import type { Project } from "@/lib/types";
 import { generateQuotationExcel } from "@/features/documents/generate-excel";
 import { createClient } from "@/config/supabase/client";
 import { ConfirmModal } from "@/components/modal";
+import { NumberInput } from "@/components/ui/number-input";
 
 export default function DocumentsPage() {
   const params = useParams();
@@ -399,8 +400,7 @@ function QuotationForm({ project }: { project: Project | null }) {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-xs font-semibold text-zinc-700 mb-1.5">الكمية</label>
-                      <input
-                        type="number"
+                      <NumberInput
                         step="0.01"
                         {...register(`items.${index}.quantity`, { valueAsNumber: true })}
                         className="w-full bg-white border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all font-mono"
@@ -421,8 +421,7 @@ function QuotationForm({ project }: { project: Project | null }) {
                     </div>
                     <div>
                       <label className="block text-xs font-semibold text-zinc-700 mb-1.5">فئة السعر (ج.م.)</label>
-                      <input
-                        type="number"
+                      <NumberInput
                         step="0.01"
                         {...register(`items.${index}.unit_price`, { valueAsNumber: true })}
                         className="w-full bg-white border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all font-mono"
@@ -886,7 +885,7 @@ function PaymentCertForm({ project }: { project: Project | null }) {
                     </div>
                     <div>
                       <label className="block text-[10px] md:text-xs font-semibold text-zinc-700 mb-1.5 text-center">كمية المقايسة</label>
-                      <input type="number" step="0.01" {...register(`items.${index}.quantity_contract`, { 
+                      <NumberInput step="0.01" {...register(`items.${index}.quantity_contract`, { 
                         valueAsNumber: true,
                         onChange: (e) => {
                           const val = parseFloat(e.target.value) || 0;
@@ -896,7 +895,7 @@ function PaymentCertForm({ project }: { project: Project | null }) {
                     </div>
                     <div>
                       <label className="block text-[10px] md:text-xs font-semibold text-amber-700 mb-1.5 text-center">كمية سابقة</label>
-                      <input type="number" step="0.01" {...register(`items.${index}.quantity_previous`, { 
+                      <NumberInput step="0.01" {...register(`items.${index}.quantity_previous`, { 
                         valueAsNumber: true,
                         onChange: (e) => {
                           const val = parseFloat(e.target.value) || 0;
@@ -906,7 +905,7 @@ function PaymentCertForm({ project }: { project: Project | null }) {
                     </div>
                     <div>
                       <label className="block text-[10px] md:text-xs font-semibold text-emerald-700 mb-1.5 text-center">كمية حالية</label>
-                      <input type="number" step="0.01" {...register(`items.${index}.quantity_current`, { 
+                      <NumberInput step="0.01" {...register(`items.${index}.quantity_current`, { 
                         valueAsNumber: true,
                         onChange: (e) => {
                           const val = parseFloat(e.target.value) || 0;
@@ -920,11 +919,11 @@ function PaymentCertForm({ project }: { project: Project | null }) {
                     </div>
                     <div>
                       <label className="block text-[10px] md:text-xs font-semibold text-blue-700 mb-1.5 text-center">نسبة التنفيذ %</label>
-                      <input type="number" step="0.01" {...register(`items.${index}.execution_percentage`, { valueAsNumber: true })} className="w-full bg-blue-50 border border-blue-200 rounded-lg px-2 py-2 text-sm text-center font-mono" />
+                      <NumberInput step="0.01" {...register(`items.${index}.execution_percentage`, { valueAsNumber: true })} className="w-full bg-blue-50 border border-blue-200 rounded-lg px-2 py-2 text-sm text-center font-mono" />
                     </div>
                     <div>
                       <label className="block text-[10px] md:text-xs font-semibold text-zinc-700 mb-1.5 text-center">الفئة (السعر)</label>
-                      <input type="number" step="0.01" {...register(`items.${index}.unit_price`, { valueAsNumber: true })} className="w-full bg-white border border-zinc-200 rounded-lg px-2 py-2 text-sm text-center font-mono" />
+                      <NumberInput step="0.01" {...register(`items.${index}.unit_price`, { valueAsNumber: true })} className="w-full bg-white border border-zinc-200 rounded-lg px-2 py-2 text-sm text-center font-mono" />
                     </div>
                     <div>
                       <label className="block text-[10px] md:text-xs font-semibold text-purple-700 mb-1.5 text-center">الإجمالي بالجنيه</label>
