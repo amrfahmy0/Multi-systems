@@ -31,3 +31,25 @@ export async function compressAndUploadImage(
 
   return urlData.publicUrl;
 }
+
+export async function deleteImageFromStorage(url: string, bucket: string = "receipts"): Promise<void> {
+  if (!url) return;
+  try {
+    // Extract filename from the end of the Supabase public URL
+    const urlParts = url.split("/");
+    const filenameWithParams = urlParts[urlParts.length - 1];
+    if (!filenameWithParams) return;
+    
+    const filename = filenameWithParams.split("?")[0];
+    if (!filename) return;
+
+    const supabase = createClient();
+    const { error } = await supabase.storage.from(bucket).remove([filename]);
+    
+    if (error) {
+      console.error(`Failed to delete image ${filename}:`, error);
+    }
+  } catch (err) {
+    console.error("Error deleting image from storage:", err);
+  }
+}
