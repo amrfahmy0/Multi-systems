@@ -210,7 +210,7 @@ export function useFinancials(projectId: string) {
           const { error: expError } = await supabase.from("general_expenses").insert({
             project_id: log.project_id,
             amount,
-            category: "supervisor_wage",
+            category: "يومية إشراف",
             description,
             expense_date: log.work_date,
           });
@@ -220,7 +220,7 @@ export function useFinancials(projectId: string) {
           const { error: expError } = await supabase.from("general_expenses").delete()
             .eq("project_id", log.project_id)
             .eq("amount", amount)
-            .eq("category", "supervisor_wage")
+            .eq("category", "يومية إشراف")
             .eq("description", description)
             .eq("expense_date", log.work_date);
           if (expError) throw expError;

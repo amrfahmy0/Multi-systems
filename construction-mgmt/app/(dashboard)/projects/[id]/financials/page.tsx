@@ -842,7 +842,7 @@ function AddExpenseModal({ onClose, onSubmit, initialData }: { onClose: () => vo
               {EXPENSE_CATEGORIES.map((c) => (
                 <option key={c.value} value={c.value}>{c.label}</option>
               ))}
-              {customCategories.filter(c => !EXPENSE_CATEGORIES.find(ec => ec.value === c)).map((c) => (
+              {customCategories.filter(c => !EXPENSE_CATEGORIES.find(ec => ec.value === c) && c !== "يومية إشراف" && c !== "مشتريات" && c !== "supervisor_wage" && c !== "procurement").map((c) => (
                 <option key={c} value={c}>{c}</option>
               ))}
               <option value="custom_other_category" className="font-bold text-primary-600">➕ كتابة فئة أخرى...</option>

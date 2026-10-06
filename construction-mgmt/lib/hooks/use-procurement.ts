@@ -39,7 +39,7 @@ export function useProcurement(projectId: string) {
         const { error: expError } = await supabase.from("general_expenses").insert({
           project_id: projectId,
           amount: Number(formData.quantity) * Number(formData.unit_price),
-          category: formData.category, // Copying exact category from procurement
+          category: "مشتريات",
           description: `مشتريات: ${formData.item_name}`,
           expense_date: formData.procurement_date, // Copying exact date from procurement
         });
