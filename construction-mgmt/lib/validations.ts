@@ -5,8 +5,8 @@ export const projectSchema = z.object({
   name: z.string().min(1, "اسم المشروع مطلوب"),
   client_name: z.string().min(1, "اسم العميل مطلوب"),
   location: z.string().optional(),
-  supervisor_daily_wage: z.number().min(0).default(750),
-  laborer_daily_wage: z.number().min(0).default(350),
+  supervisor_daily_wage: z.number().min(0, "يجب أن يكون أكبر من أو يساوي 0"),
+  laborer_daily_wage: z.number().min(0, "يجب أن يكون أكبر من أو يساوي 0"),
   status: z.enum(["active", "completed", "on_hold", "cancelled"]),
   start_date: z.string().min(1, "تاريخ البدء مطلوب"),
 });
