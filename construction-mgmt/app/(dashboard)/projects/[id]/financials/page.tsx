@@ -1207,32 +1207,32 @@ function SupervisorTable({ logs, onEdit, onDelete, onTogglePaid }: { logs: Super
   return (
     <div>
       {/* Supervisor Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-        <div className="bg-white rounded-2xl border border-zinc-200/60 p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-all group gap-3">
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-heading font-bold text-zinc-500 mb-1">إجمالي أيام العمل</p>
-            <h4 className="text-lg xl:text-xl font-bold font-mono text-zinc-900">{totalDays} يوم</h4>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4 mb-4">
+        <div className="bg-white rounded-xl md:rounded-2xl border border-zinc-200/60 p-3 md:p-4 flex flex-col md:flex-row md:items-center justify-between shadow-sm hover:shadow-md transition-all group gap-2 md:gap-3">
+          <div className="min-w-0 flex-1 order-2 md:order-1">
+            <p className="text-[10px] md:text-xs font-heading font-bold text-zinc-500 mb-0.5 md:mb-1">إجمالي أيام العمل</p>
+            <h4 className="text-base md:text-lg xl:text-xl font-bold font-mono text-zinc-900">{totalDays} يوم</h4>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-            <UserCog size={20} />
-          </div>
-        </div>
-        <div className="bg-white rounded-2xl border border-zinc-200/60 p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-all group gap-3">
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-heading font-bold text-zinc-500 mb-1">الأيام غير المدفوعة</p>
-            <h4 className="text-lg xl:text-xl font-bold font-mono text-rose-600">{unpaidDays} يوم</h4>
-          </div>
-          <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-            <TrendingDown size={20} />
+          <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform order-1 md:order-2">
+            <UserCog className="w-4 h-4 md:w-5 md:h-5" />
           </div>
         </div>
-        <div className="bg-zinc-900 rounded-2xl border border-zinc-800 p-4 flex items-center justify-between shadow-md hover:shadow-lg transition-all group gap-3">
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-heading font-bold text-zinc-400 mb-1">إجمالي المدفوع</p>
-            <h4 className="text-lg xl:text-xl font-bold font-mono text-emerald-400">{formatCurrency(totalPaidAmount)}</h4>
+        <div className="bg-white rounded-xl md:rounded-2xl border border-zinc-200/60 p-3 md:p-4 flex flex-col md:flex-row md:items-center justify-between shadow-sm hover:shadow-md transition-all group gap-2 md:gap-3">
+          <div className="min-w-0 flex-1 order-2 md:order-1">
+            <p className="text-[10px] md:text-xs font-heading font-bold text-zinc-500 mb-0.5 md:mb-1">الأيام غير المدفوعة</p>
+            <h4 className="text-base md:text-lg xl:text-xl font-bold font-mono text-rose-600">{unpaidDays} يوم</h4>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-zinc-800 text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-            <Banknote size={20} />
+          <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform order-1 md:order-2">
+            <TrendingDown className="w-4 h-4 md:w-5 md:h-5" />
+          </div>
+        </div>
+        <div className="bg-zinc-900 rounded-xl md:rounded-2xl border border-zinc-800 p-3 md:p-4 flex flex-col md:flex-row md:items-center justify-between shadow-md hover:shadow-lg transition-all group gap-2 md:gap-3 col-span-2 sm:col-span-1">
+          <div className="min-w-0 flex-1 order-2 md:order-1">
+            <p className="text-[10px] md:text-xs font-heading font-bold text-zinc-400 mb-0.5 md:mb-1">إجمالي المدفوع</p>
+            <h4 className="text-base md:text-lg xl:text-xl font-bold font-mono text-emerald-400">{formatCurrency(totalPaidAmount)}</h4>
+          </div>
+          <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-zinc-800 text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform order-1 md:order-2">
+            <Banknote className="w-4 h-4 md:w-5 md:h-5" />
           </div>
         </div>
       </div>
