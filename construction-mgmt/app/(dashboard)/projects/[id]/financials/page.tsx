@@ -44,7 +44,26 @@ type Tab = "payments" | "expenses" | "procurement" | "supervisor";
 export default function FinancialsPage() {
   const params = useParams();
   const projectId = params.id as string;
-  const [activeTab, setActiveTab] = useState<Tab>("payments");
+  const [activeTab, setActiveTabState] = useState<Tab>("payments");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get("tab") as Tab;
+      if (tabParam && ["payments", "expenses", "procurement", "supervisor"].includes(tabParam)) {
+        setActiveTabState(tabParam);
+      }
+    }
+  }, []);
+
+  const setActiveTab = (tab: Tab) => {
+    setActiveTabState(tab);
+    if (typeof window !== "undefined") {
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.set("tab", tab);
+      window.history.replaceState({}, "", newUrl);
+    }
+  };
   const [project, setProject] = useState<ProjectWithFinancials | null>(null);
   const [payments, setPayments] = useState<ClientPayment[]>([]);
   const [expenses, setExpenses] = useState<GeneralExpense[]>([]);

@@ -20,7 +20,27 @@ import { NumberInput } from "@/components/ui/number-input";
 export default function DocumentsPage() {
   const params = useParams();
   const projectId = params.id as string;
-  const [activeDoc, setActiveDoc] = useState<"quotation" | "payment_cert">("quotation");
+  type DocTab = "quotation" | "payment_cert";
+  const [activeDoc, setActiveDocState] = useState<DocTab>("quotation");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get("tab") as DocTab;
+      if (tabParam && ["quotation", "payment_cert"].includes(tabParam)) {
+        setActiveDocState(tabParam);
+      }
+    }
+  }, []);
+
+  const setActiveDoc = (tab: DocTab) => {
+    setActiveDocState(tab);
+    if (typeof window !== "undefined") {
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.set("tab", tab);
+      window.history.replaceState({}, "", newUrl);
+    }
+  };
   const { addToast } = useToast();
   const { fetchProjectWithFinancials } = useProjects();
   const [project, setProject] = useState<Project | null>(null);
